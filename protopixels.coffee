@@ -1,19 +1,42 @@
 window.onload = ->
-  # orig = document.getElementById 'orig'
-  # octx = orig.getContext '2d'
+  blank = document.createElement("canvas")
+  bctx = blank.getContext('2d')
 
-  orig = new Image()
-  orig.onload = =>
-    big = @convert(orig)
-    @display(big)
-  orig.src = 'orig.png'
+  original = new Image()
+  original.onload = =>
+    big = convert(original)
+    display(big)
+  original.src = 'orig.png'
 
 
-convert = (orig) ->
+convert = (img) ->
   console.log "convert()"
-  return [44,55,66,77]
-  # blank = document.createElement("canvas")
-  # bctx = blank.getContext '2d'
+  orig = document.createElement("canvas")
+  octx = orig.getContext('2d')
+  octx.drawImage(img,0,0)
+
+  imgdata = octx.getImageData(0,0,50,50)
+  ht = imgdata.height
+  wd = imgdata.width
+  idata = imgdata.data
+  console.log "idata ht,wd = #{ht},#{wd}"
+  console.log "idata.length = #{idata.length}"
+  zz = []
+  for j in [0..19]
+    zz.push(idata[j])
+  i = 0
+  for k in [0..3]
+    console.log " "
+    console.log "PIXEL #{i}"
+    r = zz.shift()
+    console.log "r = #{r}"
+    g = zz.shift()
+    console.log "g = #{g}"
+    b = zz.shift()
+    console.log "b = #{b}"
+    a = zz.shift()
+    console.log "a = #{a}"
+    i = i + 1
 
 
 display = (pxdata) ->

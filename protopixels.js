@@ -2,21 +2,52 @@
 var convert, display;
 
 window.onload = function() {
-  var orig;
-  orig = new Image();
-  orig.onload = (function(_this) {
+  var bctx, blank, original;
+  blank = document.createElement("canvas");
+  bctx = blank.getContext('2d');
+  original = new Image();
+  original.onload = (function(_this) {
     return function() {
       var big;
-      big = _this.convert(orig);
-      return _this.display(big);
+      big = convert(original);
+      return display(big);
     };
   })(this);
-  return orig.src = 'orig.png';
+  return original.src = 'orig.png';
 };
 
-convert = function(orig) {
+convert = function(img) {
+  var a, b, g, ht, i, idata, imgdata, j, k, l, m, octx, orig, r, results, wd, zz;
   console.log("convert()");
-  return [44, 55, 66, 77];
+  orig = document.createElement("canvas");
+  octx = orig.getContext('2d');
+  octx.drawImage(img, 0, 0);
+  imgdata = octx.getImageData(0, 0, 50, 50);
+  ht = imgdata.height;
+  wd = imgdata.width;
+  idata = imgdata.data;
+  console.log("idata ht,wd = " + ht + "," + wd);
+  console.log("idata.length = " + idata.length);
+  zz = [];
+  for (j = l = 0; l <= 19; j = ++l) {
+    zz.push(idata[j]);
+  }
+  i = 0;
+  results = [];
+  for (k = m = 0; m <= 3; k = ++m) {
+    console.log(" ");
+    console.log("PIXEL " + i);
+    r = zz.shift();
+    console.log("r = " + r);
+    g = zz.shift();
+    console.log("g = " + g);
+    b = zz.shift();
+    console.log("b = " + b);
+    a = zz.shift();
+    console.log("a = " + a);
+    results.push(i = i + 1);
+  }
+  return results;
 };
 
 display = function(pxdata) {
