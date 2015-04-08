@@ -1,6 +1,4 @@
 window.onload = ->
-  blank = document.createElement("canvas")
-  bctx = blank.getContext('2d')
 
   original = new Image()
   original.onload = =>
@@ -10,7 +8,6 @@ window.onload = ->
 
 
 convert = (img) ->
-  console.log "convert()"
   orig = document.createElement("canvas")
   octx = orig.getContext('2d')
   octx.drawImage(img,0,0)
@@ -19,50 +16,48 @@ convert = (img) ->
   ht = imgdata.height
   wd = imgdata.width
   idata = imgdata.data
-  console.log "idata ht,wd = #{ht},#{wd}"
-  console.log "idata.length = #{idata.length}"
-  zz = []
-  for j in [0..19]
-    zz.push(idata[j])
-  i = 0
-  for k in [0..3]
-    console.log " "
-    console.log "PIXEL #{i}"
-    r = zz.shift()
-    console.log "r = #{r}"
-    g = zz.shift()
-    console.log "g = #{g}"
-    b = zz.shift()
-    console.log "b = #{b}"
-    a = zz.shift()
-    console.log "a = #{a}"
-    i = i + 1
+
+  blank = document.createElement("canvas")
+  bctx = blank.getContext('2d')
+  grid = bctx.createImageData(600,600)
+
+  for m in [0..49]
+    for n in [0..49]
+      r = idata[200*n + 4*m]
+      g = idata[200*n + 4*m + 1]
+      b = idata[200*n + 4*m + 2]
+      insert(grid, m, n, r, g, b)
+
+  return grid
+
+
+insert = (gr, mm, nn, rr, gg, bb) ->
+  dots = [6,6,6,6,6,5,4,3,3,2,1,0]
+  rrr = [rr,0,0,255]
+  ggg = [0,gg,0,255]
+  bbb = [0,0,bb,255]
+  zz = 28800*nn + 48*mm
+  for k in [0..11]
+    for j in [0..11]
+      p = dots[k]
+      p2 = 2*(6-p)
+      for i in [0..p]
+        putpx(gr,rrr,zz,k,j,i)
+      for i in [0..p2]
+        putpx(gr,bbb,zz,k,j,i)
+      for i in [0..p]
+        putpx(gr,ggg,zz,k,j,i)
+
+
+putpx = (gggg, rgba, zzzz, kkkk, jjjj, iiii) ->
+  console.log " "
+  console.log "zz = #{zzzz}"
+  console.log "k = #{kkkk}"
+  console.log "j = #{jjjj}"
+  console.log "i = #{iiii}"
+  for ii in [0..4]
+    console.log "  ... add:  #{rgba[ii]}"
+  alert "next"
 
 
 display = (pxdata) ->
-  console.log "display()"
-
-
-  # imgdata = octx.getImageData
-  # ht = imgdata.height
-  # wd = imgdata.width
-  # idata = imgdata.data
-  # console.log "idata.length = #{idata.length}"
-
-  # rdata = []
-  # gdata = []
-  # bdata = []
-  # for i in [0..2499]
-  #   a = idata.shift
-  #   r = idata.shift
-  #   g = idata.shift
-  #   b = idata.shift
-  #   rdata.push 0,r,0,0
-  #   gdata.push 0,0,g,0
-  #   bdata.push 0,0,0,b
-  #   if i<5
-  #     console.log " "
-  #     console.log "PIXEL #{i}"
-  #     console.log "r = #{r}"
-  #     console.log "g = #{g}"
-  #     console.log "b = #{b}"
