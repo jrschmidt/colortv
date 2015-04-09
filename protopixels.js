@@ -6,16 +6,16 @@ window.onload = function() {
   original = new Image();
   original.onload = (function(_this) {
     return function() {
-      var big;
-      big = convert(original);
-      return display(big);
+      var bigdata;
+      bigdata = convert(original);
+      return display(bigdata);
     };
   })(this);
   return original.src = 'orig.png';
 };
 
 convert = function(img) {
-  var b, bctx, blank, g, grid, ht, i, idata, imgdata, l, m, n, octx, orig, r, wd;
+  var b, big, bigctx, bigimgdata, g, grid, ht, i, idata, imgdata, l, m, n, octx, orig, r, wd;
   orig = document.createElement("canvas");
   octx = orig.getContext('2d');
   octx.drawImage(img, 0, 0);
@@ -23,9 +23,10 @@ convert = function(img) {
   ht = imgdata.height;
   wd = imgdata.width;
   idata = imgdata.data;
-  blank = document.createElement("canvas");
-  bctx = blank.getContext('2d');
-  grid = bctx.createImageData(600, 600);
+  big = document.getElementById('big');
+  bigctx = big.getContext('2d');
+  bigimgdata = bigctx.createImageData(600, 600);
+  grid = bigimgdata.data;
   for (n = i = 0; i <= 49; n = ++i) {
     for (m = l = 0; l <= 49; m = ++l) {
       r = idata[200 * n + 4 * m];
@@ -34,7 +35,7 @@ convert = function(img) {
       insert(grid, m, n, r, g, b);
     }
   }
-  return grid;
+  return bigimgdata;
 };
 
 insert = function(gr, mm, nn, rr, gg, bb) {
@@ -70,16 +71,18 @@ insert = function(gr, mm, nn, rr, gg, bb) {
 };
 
 putpx = function(gggg, rgba, zzzz, kkkk, jjjj) {
-  var i, ii, ix;
-  console.log(" ");
-  console.log("zz = " + zzzz);
-  console.log("k = " + kkkk);
-  console.log("j = " + jjjj);
+  var i, ii, ix, results;
   ix = zzzz + 2400 * kkkk + 4 * jjjj;
+  results = [];
   for (ii = i = 0; i <= 3; ii = ++i) {
-    console.log("  ... add:  " + rgba[ii] + " at " + (ix + ii));
+    results.push(gggg[ix + ii] = rgba[ii]);
   }
-  return alert("next");
+  return results;
 };
 
-display = function(pxdata) {};
+display = function(pxdata) {
+  var big, bigctx;
+  big = document.getElementById('big');
+  bigctx = big.getContext('2d');
+  return bigctx.putImageData(pxdata, 0, 0);
+};

@@ -1,9 +1,8 @@
 window.onload = ->
-
   original = new Image()
   original.onload = =>
-    big = convert(original)
-    display(big)
+    bigdata = convert(original)
+    display(bigdata)
   original.src = 'orig.png'
 
 
@@ -17,9 +16,10 @@ convert = (img) ->
   wd = imgdata.width
   idata = imgdata.data
 
-  blank = document.createElement("canvas")
-  bctx = blank.getContext('2d')
-  grid = bctx.createImageData(600,600)
+  big = document.getElementById('big')
+  bigctx = big.getContext('2d')
+  bigimgdata = bigctx.createImageData(600,600)
+  grid = bigimgdata.data
 
   for n in [0..49]
     for m in [0..49]
@@ -28,7 +28,7 @@ convert = (img) ->
       b = idata[200*n + 4*m + 2]
       insert(grid, m, n, r, g, b)
 
-  return grid
+  return bigimgdata
 
 
 insert = (gr, mm, nn, rr, gg, bb) ->
@@ -65,14 +65,12 @@ insert = (gr, mm, nn, rr, gg, bb) ->
 
 
 putpx = (gggg, rgba, zzzz, kkkk, jjjj) ->
-  console.log " "
-  console.log "zz = #{zzzz}"
-  console.log "k = #{kkkk}"
-  console.log "j = #{jjjj}"
   ix = zzzz + 2400*kkkk + 4*jjjj
   for ii in [0..3]
-    console.log "  ... add:  #{rgba[ii]} at #{ix+ii}"
-  alert "next"
+    gggg[ix+ii] = rgba[ii]
 
 
 display = (pxdata) ->
+  big = document.getElementById('big')
+  bigctx = big.getContext('2d')
+  bigctx.putImageData(pxdata,0,0)
