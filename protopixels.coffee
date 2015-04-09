@@ -21,8 +21,8 @@ convert = (img) ->
   bctx = blank.getContext('2d')
   grid = bctx.createImageData(600,600)
 
-  for m in [0..49]
-    for n in [0..49]
+  for n in [0..49]
+    for m in [0..49]
       r = idata[200*n + 4*m]
       g = idata[200*n + 4*m + 1]
       b = idata[200*n + 4*m + 2]
@@ -32,31 +32,46 @@ convert = (img) ->
 
 
 insert = (gr, mm, nn, rr, gg, bb) ->
-  dots = [6,6,6,6,6,5,4,3,3,2,1,0]
+  dots = [
+    [6,0,6]
+    [6,0,6]
+    [6,0,6]
+    [6,0,6]
+    [6,0,6]
+    [5,2,5]
+    [4,4,4]
+    [3,6,3]
+    [3,6,3]
+    [2,8,2]
+    [1,10,1]
+    [0,12,0]
+  ]
+
   rrr = [rr,0,0,255]
   ggg = [0,gg,0,255]
   bbb = [0,0,bb,255]
+  rgb = [rrr,bbb,ggg]
   zz = 28800*nn + 48*mm
+
   for k in [0..11]
-    for j in [0..11]
-      p = dots[k]
-      p2 = 2*(6-p)
-      for i in [0..p]
-        putpx(gr,rrr,zz,k,j,i)
-      for i in [0..p2]
-        putpx(gr,bbb,zz,k,j,i)
-      for i in [0..p]
-        putpx(gr,ggg,zz,k,j,i)
+    j2 = 0
+    j3 = 0
+    for cc in [0..2]
+      if dots[k][cc] > 0
+        for j in [j2 .. j2 + dots[k][cc] - 1]
+          putpx(gr,rgb[cc],zz,k,j)
+          j3 = j
+        j2 = j3 + 1
 
 
-putpx = (gggg, rgba, zzzz, kkkk, jjjj, iiii) ->
+putpx = (gggg, rgba, zzzz, kkkk, jjjj) ->
   console.log " "
   console.log "zz = #{zzzz}"
   console.log "k = #{kkkk}"
   console.log "j = #{jjjj}"
-  console.log "i = #{iiii}"
-  for ii in [0..4]
-    console.log "  ... add:  #{rgba[ii]}"
+  ix = zzzz + 2400*kkkk + 4*jjjj
+  for ii in [0..3]
+    console.log "  ... add:  #{rgba[ii]} at #{ix+ii}"
   alert "next"
 
 

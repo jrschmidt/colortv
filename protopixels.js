@@ -15,7 +15,7 @@ window.onload = function() {
 };
 
 convert = function(img) {
-  var b, bctx, blank, g, grid, ht, idata, imgdata, l, m, n, o, octx, orig, r, wd;
+  var b, bctx, blank, g, grid, ht, i, idata, imgdata, l, m, n, octx, orig, r, wd;
   orig = document.createElement("canvas");
   octx = orig.getContext('2d');
   octx.drawImage(img, 0, 0);
@@ -26,8 +26,8 @@ convert = function(img) {
   blank = document.createElement("canvas");
   bctx = blank.getContext('2d');
   grid = bctx.createImageData(600, 600);
-  for (m = l = 0; l <= 49; m = ++l) {
-    for (n = o = 0; o <= 49; n = ++o) {
+  for (n = i = 0; i <= 49; n = ++i) {
+    for (m = l = 0; l <= 49; m = ++l) {
       r = idata[200 * n + 4 * m];
       g = idata[200 * n + 4 * m + 1];
       b = idata[200 * n + 4 * m + 2];
@@ -38,34 +38,30 @@ convert = function(img) {
 };
 
 insert = function(gr, mm, nn, rr, gg, bb) {
-  var bbb, dots, ggg, i, j, k, l, p, p2, results, rrr, zz;
-  dots = [6, 6, 6, 6, 6, 5, 4, 3, 3, 2, 1, 0];
+  var bbb, cc, dots, ggg, i, j, j2, j3, k, results, rgb, rrr, zz;
+  dots = [[6, 0, 6], [6, 0, 6], [6, 0, 6], [6, 0, 6], [6, 0, 6], [5, 2, 5], [4, 4, 4], [3, 6, 3], [3, 6, 3], [2, 8, 2], [1, 10, 1], [0, 12, 0]];
   rrr = [rr, 0, 0, 255];
   ggg = [0, gg, 0, 255];
   bbb = [0, 0, bb, 255];
+  rgb = [rrr, bbb, ggg];
   zz = 28800 * nn + 48 * mm;
   results = [];
-  for (k = l = 0; l <= 11; k = ++l) {
+  for (k = i = 0; i <= 11; k = ++i) {
+    j2 = 0;
+    j3 = 0;
     results.push((function() {
-      var o, q, ref, ref1, results1, s;
+      var l, o, ref, ref1, results1;
       results1 = [];
-      for (j = o = 0; o <= 11; j = ++o) {
-        p = dots[k];
-        p2 = 2 * (6 - p);
-        for (i = q = 0, ref = p; 0 <= ref ? q <= ref : q >= ref; i = 0 <= ref ? ++q : --q) {
-          putpx(gr, rrr, zz, k, j, i);
-        }
-        for (i = s = 0, ref1 = p2; 0 <= ref1 ? s <= ref1 : s >= ref1; i = 0 <= ref1 ? ++s : --s) {
-          putpx(gr, bbb, zz, k, j, i);
-        }
-        results1.push((function() {
-          var ref2, results2, t;
-          results2 = [];
-          for (i = t = 0, ref2 = p; 0 <= ref2 ? t <= ref2 : t >= ref2; i = 0 <= ref2 ? ++t : --t) {
-            results2.push(putpx(gr, ggg, zz, k, j, i));
+      for (cc = l = 0; l <= 2; cc = ++l) {
+        if (dots[k][cc] > 0) {
+          for (j = o = ref = j2, ref1 = j2 + dots[k][cc] - 1; ref <= ref1 ? o <= ref1 : o >= ref1; j = ref <= ref1 ? ++o : --o) {
+            putpx(gr, rgb[cc], zz, k, j);
+            j3 = j;
           }
-          return results2;
-        })());
+          results1.push(j2 = j3 + 1);
+        } else {
+          results1.push(void 0);
+        }
       }
       return results1;
     })());
@@ -73,15 +69,15 @@ insert = function(gr, mm, nn, rr, gg, bb) {
   return results;
 };
 
-putpx = function(gggg, rgba, zzzz, kkkk, jjjj, iiii) {
-  var ii, l;
+putpx = function(gggg, rgba, zzzz, kkkk, jjjj) {
+  var i, ii, ix;
   console.log(" ");
   console.log("zz = " + zzzz);
   console.log("k = " + kkkk);
   console.log("j = " + jjjj);
-  console.log("i = " + iiii);
-  for (ii = l = 0; l <= 4; ii = ++l) {
-    console.log("  ... add:  " + rgba[ii]);
+  ix = zzzz + 2400 * kkkk + 4 * jjjj;
+  for (ii = i = 0; i <= 3; ii = ++i) {
+    console.log("  ... add:  " + rgba[ii] + " at " + (ix + ii));
   }
   return alert("next");
 };
