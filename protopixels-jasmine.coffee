@@ -1,9 +1,9 @@
-window.onload = ->
-  original = new Image()
-  original.onload = =>
-    bigdata = convert(original)
-    display(bigdata)
-  original.src = 'orig.png'
+# window.onload = ->
+#   original = new Image()
+#   original.onload = =>
+#     bigdata = convert(original)
+#     display(bigdata)
+#   original.src = 'orig.png'
 
 
 
