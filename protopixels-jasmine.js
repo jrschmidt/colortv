@@ -4,8 +4,16 @@ var SquareDotHelper, convert, display, insert, putpx;
 SquareDotHelper = (function() {
   function SquareDotHelper() {}
 
-  SquareDotHelper.prototype.get_dot_col = function(xx, yy) {
-    return 10;
+  SquareDotHelper.prototype.get_dots = function(xx, yy) {
+    return {
+      b: [1, 16],
+      r: [2, 17],
+      g: [3, 16]
+    };
+  };
+
+  SquareDotHelper.prototype.get_dot_column = function(color, x, y) {
+    return 1;
   };
 
   return SquareDotHelper;

@@ -9,8 +9,17 @@
 
 class SquareDotHelper
 
-  get_dot_col: (xx,yy) ->
-    return 10
+  get_dots: (xx,yy) ->
+    # fake answer:
+    return {b: [1,16],r: [2,17], g: [3,16]}
+
+
+  get_dot_column: (color, x, y) ->
+    # fake answer:
+    return 1
+
+
+
 
 
 
