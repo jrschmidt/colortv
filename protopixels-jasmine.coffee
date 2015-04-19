@@ -6,15 +6,142 @@
 #   original.src = 'orig.png'
 
 
+# xx,yy  -  Coordinates of a pixel in the original small image, which are also
+# the coordinates of a large 12x12 square superimposed on the large image grid.
+
+# x,y  -  Pixel coordinates on the large image. x = 12 * xx, and y = 12 * yy.
+
+# a,b  -  Coordinates of a big "dot" on the dot system.
+
+
+
+class QuadrantSplitter
+
+  constructor: ->
+    @up = [3,4,5,7,7,6,6,6,6,5,5,3,2]
+    @dn =[1,2,4,4,5,5,5,5,6,6,4,3,2]
+
+
+  split: (hx,hy) ->
+    top = @up.slice(0)
+    btm = @dn.slice(0)
+
+    if hy < 6
+      up_trim = 6 - hy
+    else
+      up_trim = 0
+    if hy > 6
+      dn_trim = hy - 6
+    else
+      dn_trim = 0
+
+    if hy < 6
+      for j in [0..12]
+        cut = Math.min(top[j], up_trim)
+        top[j] = top[j] - cut
+        btm[j] = btm[j] + cut
+
+    if hy > 6
+      for j in [0..12]
+        cut = Math.min(btm[j], dn_trim)
+        btm[j] = btm[j] - cut
+        top[j] = top[j] + cut
+
+    qa = 0 # Quadrant 'a' upper-left
+    qb = 0 # Quadrant 'b' upper-right
+    qc = 0 # Quadrant 'c' lower-left
+    qd = 0 # Quadrant 'd' lower-right
+
+    for j in [0..hx]
+      qa += top[j]
+      qc += btm[j]
+
+    for j in [hx+1..12]
+      qb += top[j]
+      qd += btm[j]
+
+    return [qa,qb,qc,qd]
+
+
+
+class DotSquareHelper
+
+  find_squares: (a,b) ->
+    sqq = []
+    return sqq
+
+
 
 class SquareDotHelper
+
+  constructor: ->
+
+    # z_blue = [
+    #   {zmax: , zcol: }
+    #
+    # z_red = [
+    #   {zmax: , zcol: }
+
+    z_green = [
+      {zmax: 114, zcol: 3}
+      {zmax: 99, zcol: 6}
+      {zmax: 84, zcol: 9}
+      {zmax: 69, zcol: 12}
+      {zmax: 54, zcol: 15}
+      {zmax: 39, zcol: 18}
+      {zmax: 24, zcol: 21}
+      {zmax: 9, zcol: 24}
+      {zmax: 111, zcol: 30}
+      {zmax: 96, zcol: 33}
+      {zmax: 81, zcol: 36}
+      {zmax: 66, zcol: 39}
+      {zmax: 51, zcol: 42}
+      {zmax: 36, zcol: 45}
+      {zmax: 21, zcol: 48}
+      {zmax: 6, zcol: 51}
+      {zmax: 108, zcol: 57}
+      {zmax: 93, zcol: 60}
+      {zmax: 78, zcol: 63}
+      {zmax: 63, zcol: 66}
+      {zmax: 48, zcol: 69}
+      {zmax: 33, zcol: 72}
+      {zmax: 18, zcol: 75}
+      {zmax: 3, zcol: 78}
+      {zmax: 105, zcol: 84}
+      {zmax: 90, zcol: 87}
+      {zmax: 75, zcol: 90}
+      {zmax: 60, zcol: 93}
+      {zmax: 45, zcol: 96}
+      {zmax: 30, zcol: 99}
+      {zmax: 15, zcol: 102}
+      {zmax: 0, zcol: 105}
+      {zmax: 102, zcol: 111}
+      {zmax: 87, zcol: 114}
+      {zmax: 72, zcol: 117}
+      {zmax: 57, zcol: 120}
+      {zmax: 42, zcol: 123}
+      {zmax: 27, zcol: 126}
+      {zmax: 12, zcol: 129}
+      {zmax: 114, zcol: 135}
+      {zmax: 99, zcol: 138}
+      {zmax: 84, zcol: 141}
+      {zmax: 69, zcol: 144}
+      {zmax: 54, zcol: 147}
+      {zmax: 39, zcol: 150}
+      {zmax: 24, zcol: 153}
+      {zmax: 9, zcol: 156}
+      {zmax: 111, zcol: 162}
+      {zmax: 96, zcol: 165}
+      {zmax: 81, zcol: 168}
+    ]
+
 
   get_dots: (xx,yy) ->
     # fake answer:
     return {b: [1,16],r: [2,17], g: [3,16]}
 
 
-  get_dot_column: (color, x, y) ->
+  get_dot_column: (color, xx, yy) ->
     # fake answer:
     return 1
 

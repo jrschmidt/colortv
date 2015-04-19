@@ -4,7 +4,7 @@ describe "Square to dot conversion helpers", ->
     @helper = new SquareDotHelper
 
 
-  it "should find the column of the 'RGB reference dot' of a given color for a square at xx,yy", ->
+  xit "should find the column of the 'RGB reference dot' of a given color for a square at xx,yy", ->
     col = @helper.get_dot_column('b',0,0,)
     expect(col).toEqual(1)
     col = @helper.get_dot_column('b',12,144)
