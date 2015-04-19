@@ -22,6 +22,14 @@ class QuadrantSplitter
     @dn =[1,2,4,4,5,5,5,5,6,6,4,3,2]
 
 
+  ratios: (hx,hy) ->
+    spl = @split(hx,hy)
+    rr = []
+    for q in spl
+      rr.push(Math.floor(q*1000/117)/1000)
+    return rr
+
+
   split: (hx,hy) ->
     top = @up.slice(0)
     btm = @dn.slice(0)

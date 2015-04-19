@@ -7,6 +7,17 @@ QuadrantSplitter = (function() {
     this.dn = [1, 2, 4, 4, 5, 5, 5, 5, 6, 6, 4, 3, 2];
   }
 
+  QuadrantSplitter.prototype.ratios = function(hx, hy) {
+    var i, len, q, rr, spl;
+    spl = this.split(hx, hy);
+    rr = [];
+    for (i = 0, len = spl.length; i < len; i++) {
+      q = spl[i];
+      rr.push(Math.floor(q * 1000 / 117) / 1000);
+    }
+    return rr;
+  };
+
   QuadrantSplitter.prototype.split = function(hx, hy) {
     var btm, cut, dn_trim, i, j, l, o, p, qa, qb, qc, qd, ref, ref1, top, up_trim;
     top = this.up.slice(0);

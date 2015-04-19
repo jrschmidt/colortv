@@ -3,18 +3,18 @@ describe("Dot quadrant splitter", function() {
   beforeEach(function() {
     return this.splitter = new QuadrantSplitter;
   });
-  xit("should split a hex zone into quadrants at an arbitrary point and compute ratios of their areas", function() {
+  it("should split a hex zone into quadrants at an arbitrary point and compute ratios of their areas", function() {
     var rrt;
     rrt = this.splitter.ratios(0, 0);
     expect(rrt[0]).toBeCloseTo(0.000, 3);
     expect(rrt[1]).toBeCloseTo(0.017, 3);
     expect(rrt[2]).toBeCloseTo(0.034, 3);
     expect(rrt[3]).toBeCloseTo(0.948, 3);
-    rrt = this.rrtitter.ratios(9, 3);
+    rrt = this.splitter.ratios(9, 3);
     expect(rrt[0]).toBeCloseTo(0.213, 3);
     expect(rrt[1]).toBeCloseTo(0.017, 3);
-    expect(rrt[2]).toBeCloseTo(0.145, 3);
-    expect(rrt[3]).toBeCloseTo(0.623, 3);
+    expect(rrt[2]).toBeCloseTo(0.623, 3);
+    expect(rrt[3]).toBeCloseTo(0.145, 3);
     rrt = this.splitter.ratios(6, 6);
     expect(rrt[0]).toBeCloseTo(0.324, 3);
     expect(rrt[1]).toBeCloseTo(0.23, 3);
