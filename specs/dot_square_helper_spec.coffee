@@ -4,7 +4,7 @@ describe "Dot to square conversion helpers", ->
     @helper = new DotSquareHelper
 
 
-  xit "should find all squares that intersect a dot at a,b", ->
+  xit "should identify and locate the squares that intersect dot a,b", ->
 
     squares = @helper.find_squares(1,16)
     expect(squares.length).toEqual(1)

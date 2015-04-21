@@ -25,6 +25,9 @@
 
 # CONVENTIONS:
 
+# "pixel square" - A square with dimensions 12 pixels by 12 pixels, representing
+# one pixel on the original small image.
+
 # "hex zone" - The skewed hexagonal shape denoting a dot's area of influence,
 # which can be formed for a dot of a given color by joining the midpoints of
 # the six surrounding dots of the other two colors.
@@ -35,6 +38,20 @@
 # x,y  -  Pixel coordinates on the large image. x = 12 * xx, and y = 12 * yy.
 
 # a,b  -  Coordinates of a big "dot" on the dot system.
+
+# Dot coordinates: A blue dot, 7 pixels in diameter, is set snugly in the upper
+# left corner and labeled '1,16' for column 1, row 16. To the right is a green dot,
+# labeled '3,16'. To the right of the green dot is a red dot, '5,16', followed
+# by another blue dot at '7,16'. Each succeeding dot in this row is centered one
+# pixel lower than the dot to its left.
+#
+# Between the green dot '3,16' and red dot '5,16' there is a blue dot above labeled
+# '4,15' and a blue dot below labeled '4,17'. This way, all the dots in column
+# 3 are green, the dots in column 4 are blue, and column 5 is red.
+#
+# Since the rows are skewed slightly downward as they go from left to right, if we
+# start with row 16 in the upper left corner, then dots from row 0 will appear in
+# the upper right corner, if we have a 50x50 original image expanded to 600x600.
 
 
 window.onload = ->
@@ -66,6 +83,29 @@ class DotIterator
         bottom = 122 - 2 * Math.floor((col - 13)/22)
 
     return [top,bottom]
+
+
+
+class DotHelper
+
+  get_xy: (a,b) ->
+    if a%2 == 0
+      return @even_xy(a,b)
+    else
+      return @odd_xy(a,b)
+
+
+  even_xy: (a,b) ->
+    od  = @odd_xy(a-1, b-1)
+    x = od[0] + 3
+    y = od[1] + 6
+    return [x,y]
+
+
+  odd_xy: (a,b) ->
+    x = 7.5 + 3.5*a - 0.5*b    # x = 3 + 7*((a-1)/2) - (b-16)/2
+    y = 0.5*a + 5.5*b - 85.5   # y = 3 + 11*(b-16)/2 + (a-1)/2
+    return [x,y]
 
 
 
@@ -122,92 +162,6 @@ class QuadrantSplitter
       qd += btm[j]
 
     return [qa,qb,qc,qd]
-
-
-
-class DotSquareHelper
-
-  find_squares: (a,b) ->
-    sqq = []
-    return sqq
-
-
-
-class SquareDotHelper
-
-  constructor: ->
-
-    # z_blue = [
-    #   {zmax: , zcol: }
-    #
-    # z_red = [
-    #   {zmax: , zcol: }
-
-    z_green = [
-      {zmax: 114, zcol: 3}
-      {zmax: 99, zcol: 6}
-      {zmax: 84, zcol: 9}
-      {zmax: 69, zcol: 12}
-      {zmax: 54, zcol: 15}
-      {zmax: 39, zcol: 18}
-      {zmax: 24, zcol: 21}
-      {zmax: 9, zcol: 24}
-      {zmax: 111, zcol: 30}
-      {zmax: 96, zcol: 33}
-      {zmax: 81, zcol: 36}
-      {zmax: 66, zcol: 39}
-      {zmax: 51, zcol: 42}
-      {zmax: 36, zcol: 45}
-      {zmax: 21, zcol: 48}
-      {zmax: 6, zcol: 51}
-      {zmax: 108, zcol: 57}
-      {zmax: 93, zcol: 60}
-      {zmax: 78, zcol: 63}
-      {zmax: 63, zcol: 66}
-      {zmax: 48, zcol: 69}
-      {zmax: 33, zcol: 72}
-      {zmax: 18, zcol: 75}
-      {zmax: 3, zcol: 78}
-      {zmax: 105, zcol: 84}
-      {zmax: 90, zcol: 87}
-      {zmax: 75, zcol: 90}
-      {zmax: 60, zcol: 93}
-      {zmax: 45, zcol: 96}
-      {zmax: 30, zcol: 99}
-      {zmax: 15, zcol: 102}
-      {zmax: 0, zcol: 105}
-      {zmax: 102, zcol: 111}
-      {zmax: 87, zcol: 114}
-      {zmax: 72, zcol: 117}
-      {zmax: 57, zcol: 120}
-      {zmax: 42, zcol: 123}
-      {zmax: 27, zcol: 126}
-      {zmax: 12, zcol: 129}
-      {zmax: 114, zcol: 135}
-      {zmax: 99, zcol: 138}
-      {zmax: 84, zcol: 141}
-      {zmax: 69, zcol: 144}
-      {zmax: 54, zcol: 147}
-      {zmax: 39, zcol: 150}
-      {zmax: 24, zcol: 153}
-      {zmax: 9, zcol: 156}
-      {zmax: 111, zcol: 162}
-      {zmax: 96, zcol: 165}
-      {zmax: 81, zcol: 168}
-    ]
-
-
-  get_dots: (xx,yy) ->
-    # fake answer:
-    return {b: [1,16],r: [2,17], g: [3,16]}
-
-
-  get_dot_column: (color, xx, yy) ->
-    # fake answer:
-    return 1
-
-
-
 
 
 
