@@ -1,3 +1,42 @@
+# PROTOPIXELS - COLOR TV APP
+# by JR Schmidt 2015
+
+# WHAT THIS DOES: This application takes the pixels from a small image (50x50)
+# and converts them to a format that emulates a CRT screen from an old color TV.
+# Instead of pixels as we usually think of them, these screens had separate red,
+# green and blue dots mixed together in a triangular pattern (look at the screen
+# of an old color TV through a magnifying glass if you get a chance). Additionally,
+# instead of going across horizontally in a straight line, the dots go slightly
+# downward as they go across the screen. So there is no one to one correspondence
+# between the original pixels and the dots. Each dot is rendered as a circle 7
+# pixels in diameter, and each pixel in the original small image is enlarged
+# to a square covering 12 pixels to a side.
+
+# HOW IT WORKS: For each red, blue or green dot, the application computes the
+# relative contribution from each of the 12x12 enlarged pixel squares that
+# intersect the dot's area of influence. Then, for each of those pixel squares,
+# the app takes that square's color value for the color of that dot (red, green
+# or blue), multiplies it by the ratio for that square, and adds it to the color
+# value for the dot. So if a pixel square covered 40% of a dot, and the pixel's
+# color value for that color was 50%, then the app would add 0.20 x 255 = 51 to
+# the dot's color value. Then each pixel of the 7x7 pixel dot would be rendered
+# with the resulting value.
+
+
+# CONVENTIONS:
+
+# "hex zone" - The skewed hexagonal shape denoting a dot's area of influence,
+# which can be formed for a dot of a given color by joining the midpoints of
+# the six surrounding dots of the other two colors.
+
+# xx,yy  -  Coordinates of a pixel in the original small image, which are also
+# the coordinates of a large 12x12 square superimposed on the large image grid.
+
+# x,y  -  Pixel coordinates on the large image. x = 12 * xx, and y = 12 * yy.
+
+# a,b  -  Coordinates of a big "dot" on the dot system.
+
+
 # window.onload = ->
 #   original = new Image()
 #   original.onload = =>
@@ -6,12 +45,27 @@
 #   original.src = 'orig.png'
 
 
-# xx,yy  -  Coordinates of a pixel in the original small image, which are also
-# the coordinates of a large 12x12 square superimposed on the large image grid.
 
-# x,y  -  Pixel coordinates on the large image. x = 12 * xx, and y = 12 * yy.
+class DotIterator
 
-# a,b  -  Coordinates of a big "dot" on the dot system.
+  get_span: (col) ->
+    if col in [0..169] # Columns that start at the top of the grid
+      if col%2 == 0
+        top = 15 - 2 * Math.floor(col/22)
+      else
+        top = 16 - 2 * Math.floor((col + 11)/22)
+    if col in [170..185] # Columns that start along the right side of the grid
+      top = 1 + 7 * (col - 170)
+
+    if col in [0..14] # Columns that end along the left side of the grid
+      bottom = 7 * (col + 3)
+    if col in [15..185] # Columns that end at the bottom of the grid
+      if col%2 == 0
+        bottom = 123 - 2 * Math.floor((col - 2)/22)
+      else
+        bottom = 122 - 2 * Math.floor((col - 13)/22)
+
+    return [top,bottom]
 
 
 
@@ -25,8 +79,7 @@ class QuadrantSplitter
   ratios: (hx,hy) ->
     spl = @split(hx,hy)
     rr = []
-    for q in spl
-      rr.push(Math.floor(q*1000/117)/1000)
+    rr.push(q/117) for q in spl
     return rr
 
 
