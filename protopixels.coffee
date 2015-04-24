@@ -65,6 +65,9 @@ window.onload = ->
 
 class ColorTvApp
 
+  constructor: ->
+    @dots = new DotDraw
+
   repixelize: (original) ->
     bigdata = @convert(original)
     @display(bigdata)
@@ -85,14 +88,9 @@ class ColorTvApp
     bigimgdata = bigctx.createImageData(600,600)
     grid = bigimgdata.data
 
-    # Old iterator over the 'big squares' for triangular 'proof of concept'.
-    for n in [0..49]
-      for m in [0..49]
-        r = idata[200*n + 4*m]
-        g = idata[200*n + 4*m + 1]
-        b = idata[200*n + 4*m + 2]
-        @insert(grid, m, n, r, g, b)
-    # Old iterator over the 'big squares' for triangular 'proof of concept'.
+    @dots.draw_dot(20,12,[255,0,0])
+
+    # column = @iterator.get_span(20)
 
     return bigimgdata
 
@@ -144,6 +142,30 @@ class ColorTvApp
     big = document.getElementById('big')
     bigctx = big.getContext('2d')
     bigctx.putImageData(pxdata,0,0)
+
+
+
+class DotDraw
+
+  constructor: ->
+    @dot_helper = new DotHelper
+    @shape = [1,2,3,3,3,2,1]
+
+
+  draw_dot: (a,b,rgb) ->
+    console.log "draw dot at #{a},#{b} #{rgb}"
+
+
+  get_pixels: (a,b) ->
+    pxx = []
+    cxy = @dot_helper.get_xy(a,b)
+    cx = cxy[0]
+    cy = cxy[1]
+    for k in [0..6]
+      y = cy + k - 3
+      for x in [ cx - @shape[k] .. cx + @shape[k] ]
+        pxx.push([x,y])
+    return pxx
 
 
 
