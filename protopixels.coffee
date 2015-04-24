@@ -54,12 +54,12 @@
 # the upper right corner, if we have a 50x50 original image expanded to 600x600.
 
 
-window.onload = ->
-  original = new Image()
-  original.onload = =>
-    bigdata = convert(original)
-    display(bigdata)
-  original.src = 'orig.png'
+# window.onload = ->
+#   original = new Image()
+#   original.onload = =>
+#     bigdata = convert(original)
+#     display(bigdata)
+#   original.src = 'orig.png'
 
 
 
@@ -83,6 +83,71 @@ class DotIterator
         bottom = 122 - 2 * Math.floor((col - 13)/22)
 
     return [top,bottom]
+
+
+
+class DotSquareHelper
+
+  constructor: ->
+    @dot_helper = new DotHelper
+
+  find_squares: (a,b) ->
+    dot_xy = @dot_helper.get_xy(a,b)
+    xy12 = @get_xxyy(dot_xy[0], dot_xy[1])
+    dot_xxyy = xy12.xxyy
+    dot_dxy = xy12.dxy
+
+    if dot_dxy[0] < 6
+      qdx = 5 - dot_dxy[0]
+    else
+      qdx = 17 - dot_dxy[0]
+
+    if dot_dxy[1] < 6
+      qdy = 5 - dot_dxy[1]
+    else
+      qdy = 17 - dot_dxy[1]
+
+    if dot_dxy[0] < 6
+      if dot_dxy[1] < 6
+        # dot center is in quadrant 'd'
+        adjust = [ [-1,-1], [0,-1], [-1,0], [0,0] ]
+      else
+        # dot center is in quadrant 'b'
+        adjust = [ [-1,0], [0,0], [-1,1], [0,1] ]
+    else
+      if dot_dxy[1] < 6
+        # dot center is in quadrant 'c'
+        adjust = [ [0,-1], [1,-1], [0,0], [1,0] ]
+      else
+        # dot center is in quadrant 'a'
+        adjust = [ [0,0], [1,0], [0,1], [1,1] ]
+
+    sq = []
+    for ad in adjust
+      sqx = dot_xxyy[0] + ad[0]
+      sqy = dot_xxyy[1] + ad[1]
+      sq.push([sqx,sqy])
+
+    quad_xxyy = sq[0]
+
+    for k in [0..3]
+      if sq[k][0] < 0 or sq[k][0] > 49 or sq[k][1] < 0 or sq[k][1] > 49
+        sq[k] = null
+
+    sqq = {
+      xxyy: quad_xxyy
+      dxy: [qdx,qdy]
+      squares: sq
+    }
+    return sqq
+
+
+  get_xxyy: (x,y) ->
+    xx = Math.floor(x/12)
+    yy = Math.floor(y/12)
+    dx = x%12
+    dy = y%12
+    return {xxyy: [xx,yy], dxy: [dx,dy]}
 
 
 
