@@ -112,7 +112,9 @@ DotDraw = (function() {
     for (k = l = 0; l <= 6; k = ++l) {
       y = cy + k - 3;
       for (x = m = ref = cx - this.shape[k], ref1 = cx + this.shape[k]; ref <= ref1 ? m <= ref1 : m >= ref1; x = ref <= ref1 ? ++m : --m) {
-        pxx.push([x, y]);
+        if (x >= 0 && x < 600 && y >= 0 && y < 600) {
+          pxx.push([x, y]);
+        }
       }
     }
     return pxx;

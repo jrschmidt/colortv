@@ -15,7 +15,7 @@ ColorTvApp = (function() {
   };
 
   ColorTvApp.prototype.convert = function(img) {
-    var big, bigctx, bigimgdata, grid, ht, idata, imgdata, octx, orig, wd;
+    var a, b, big, bigctx, bigimgdata, grid, ht, idata, imgdata, l, m, octx, orig, ref, ref1, span, wd;
     orig = document.createElement("canvas");
     octx = orig.getContext('2d');
     octx.drawImage(img, 0, 0);
@@ -27,12 +27,12 @@ ColorTvApp = (function() {
     bigctx = big.getContext('2d');
     bigimgdata = bigctx.createImageData(600, 600);
     grid = bigimgdata.data;
-    this.dots.build_dot(grid, 20, 21);
-    this.dots.build_dot(grid, 99, 62);
-    this.dots.build_dot(grid, 160, 85);
-    this.dots.build_dot(grid, 62, 99);
-    this.dots.build_dot(grid, 123, 30);
-    this.dots.build_dot(grid, 130, 93);
+    for (a = l = 0; l <= 185; a = ++l) {
+      span = this.iterator.get_span(a);
+      for (b = m = ref = span[0], ref1 = span[1]; m <= ref1; b = m += 2) {
+        this.dots.build_dot(grid, a, b);
+      }
+    }
     return bigimgdata;
   };
 
@@ -99,7 +99,9 @@ DotDraw = (function() {
     for (k = l = 0; l <= 6; k = ++l) {
       y = cy + k - 3;
       for (x = m = ref = cx - this.shape[k], ref1 = cx + this.shape[k]; ref <= ref1 ? m <= ref1 : m >= ref1; x = ref <= ref1 ? ++m : --m) {
-        pxx.push([x, y]);
+        if (x >= 0 && x < 600 && y >= 0 && y < 600) {
+          pxx.push([x, y]);
+        }
       }
     }
     return pxx;

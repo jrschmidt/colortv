@@ -143,7 +143,7 @@ class DotDraw
     for k in [0..6]
       y = cy + k - 3
       for x in [ cx - @shape[k] .. cx + @shape[k] ]
-        pxx.push([x,y])
+        pxx.push([x,y]) if x >= 0 and x < 600 and y >= 0 and y < 600
     return pxx
 
 
