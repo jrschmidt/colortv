@@ -30,7 +30,7 @@ ColorTvApp = (function() {
     for (a = l = 0; l <= 185; a = ++l) {
       span = this.iterator.get_span(a);
       for (b = m = ref = span[0], ref1 = span[1]; m <= ref1; b = m += 2) {
-        this.dots.build_dot(grid, a, b);
+        this.dots.build_dot(grid, idata, a, b);
       }
     }
     return bigimgdata;
@@ -50,21 +50,27 @@ ColorTvApp = (function() {
 DotDraw = (function() {
   function DotDraw() {
     this.dot_helper = new DotHelper;
+    this.dsq_helper = new DotSquareHelper;
+    this.splitter = new QuadrantSplitter;
     this.shape = [1, 2, 3, 3, 3, 2, 1];
   }
 
-  DotDraw.prototype.build_dot = function(grid, a, b) {
-    var rgb;
-    switch (a % 3) {
-      case 0:
-        rgb = [0, 255, 0];
-        break;
-      case 1:
-        rgb = [0, 0, 255];
-        break;
-      case 2:
-        rgb = [255, 0, 0];
+  DotDraw.prototype.build_dot = function(grid, img_data, a, b) {
+    var color, dxy, k, l, quads, rgb, sqq, squares, value, vk, xxyy, xy;
+    color = [1, 2, 0][a % 3];
+    xy = this.dot_helper.get_xy(a, b);
+    sqq = this.dsq_helper.find_squares(a, b);
+    xxyy = sqq.xxyy;
+    dxy = sqq.dxy;
+    squares = sqq.squares;
+    quads = this.splitter.ratios(dxy[0], dxy[1]);
+    value = 0;
+    rgb = [0, 0, 0];
+    for (k = l = 0; l <= 3; k = ++l) {
+      vk = img_data[200 * squares[k][1] + 4 * squares[k][0] + color] * quads[k];
+      value = value + vk;
     }
+    rgb[color] = value;
     return this.draw_dot(grid, a, b, rgb);
   };
 

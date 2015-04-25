@@ -20,7 +20,7 @@ describe "Dot quadrant splitter", ->
 
     rrt = @splitter.ratios(6,6)
     expect(Math.abs(rrt[0] - 0.324)).toBeLessThan(0.001)
-    expect(Math.abs(rrt[1] - 0.23)).toBeLessThan(0.001)
+    expect(Math.abs(rrt[1] - 0.230)).toBeLessThan(0.001)
     expect(Math.abs(rrt[2] - 0.222)).toBeLessThan(0.001)
     expect(Math.abs(rrt[3] - 0.222)).toBeLessThan(0.001)
 

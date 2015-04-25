@@ -92,7 +92,7 @@ class ColorTvApp
     for a in [0..185]
       span = @iterator.get_span(a)
       for b in [span[0]..span[1]] by 2
-        @dots.build_dot(grid,a,b)
+        @dots.build_dot(grid, idata, a, b)
 
     return bigimgdata
 
@@ -108,27 +108,36 @@ class DotDraw
 
   constructor: ->
     @dot_helper = new DotHelper
+    @dsq_helper = new DotSquareHelper
+    @splitter = new QuadrantSplitter
     @shape = [1,2,3,3,3,2,1]
 
 
-  build_dot:(grid,a,b) ->
-    switch a%3
-      when 0
-        rgb = [0,255,0]
-      when 1
-        rgb = [0,0,255]
-      when 2
-        rgb = [255,0,0]
-    @draw_dot(grid,a,b,rgb)
+  build_dot:(grid, img_data, a, b) ->
+    color = [1,2,0][a%3]
+    xy = @dot_helper.get_xy(a,b)
+    sqq = @dsq_helper.find_squares(a,b)
+    xxyy = sqq.xxyy
+    dxy = sqq.dxy
+    squares = sqq.squares
+
+    quads = @splitter.ratios(dxy[0], dxy[1])
+    value = 0
+    rgb = [0,0,0]
+    for k in [0..3]
+      vk = img_data[200*squares[k][1] + 4*squares[k][0] + color] * quads[k]
+      value = value + vk
+    rgb[color] = value
+    @draw_dot(grid, a, b, rgb)
 
 
-  draw_dot: (grid,a,b,rgb) ->
+  draw_dot: (grid, a, b, rgb) ->
     rgb.push(255)
     dots = @get_pixels(a,b)
-    @draw_pixel(grid,px,rgb) for px in dots
+    @draw_pixel(grid, px, rgb) for px in dots
 
 
-  draw_pixel: (grid,px,rgba) ->
+  draw_pixel: (grid, px, rgba) ->
     ix = 2400*px[1] + 4*px[0]
     for i in [0..3]
       grid[ix + i] = rgba[i]
