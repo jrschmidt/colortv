@@ -88,54 +88,16 @@ class ColorTvApp
     bigimgdata = bigctx.createImageData(600,600)
     grid = bigimgdata.data
 
-    @dots.draw_dot(20,12,[255,0,0])
+    @dots.draw_dot(grid,20,21,[255,0,0])
+    @dots.draw_dot(grid,99,62,[0,255,0])
+    @dots.draw_dot(grid,160,85,[0,0,255])
+    @dots.draw_dot(grid,62,99,[255,0,0])
+    @dots.draw_dot(grid,123,30,[0,255,0])
+    @dots.draw_dot(grid,130,93,[0,0,255])
 
     # column = @iterator.get_span(20)
 
     return bigimgdata
-
-
-  # Old function to write image data for triangles
-  insert: (gr, mm, nn, rr, gg, bb) ->
-    dots = [
-      [6,0,6]
-      [6,0,6]
-      [6,0,6]
-      [6,0,6]
-      [6,0,6]
-      [5,2,5]
-      [4,4,4]
-      [3,6,3]
-      [3,6,3]
-      [2,8,2]
-      [1,10,1]
-      [0,12,0]
-    ]
-
-    rrr = [rr,0,0,255]
-    ggg = [0,gg,0,255]
-    bbb = [0,0,bb,255]
-    rgb = [rrr,bbb,ggg]
-    zz = 28800*nn + 48*mm
-
-    for k in [0..11]
-      j2 = 0
-      j3 = 0
-      for cc in [0..2]
-        if dots[k][cc] > 0
-          for j in [j2 .. j2 + dots[k][cc] - 1]
-            @putpx(gr,rgb[cc],zz,k,j)
-            j3 = j
-          j2 = j3 + 1
-  # Old function to write image data for triangles
-
-
-  # Old function used by above function
-  putpx: (gggg, rgba, zzzz, kkkk, jjjj) ->
-    ix = zzzz + 2400*kkkk + 4*jjjj
-    for ii in [0..3]
-      gggg[ix+ii] = rgba[ii]
-  # Old function used by above function
 
 
   display: (pxdata) ->
@@ -152,8 +114,19 @@ class DotDraw
     @shape = [1,2,3,3,3,2,1]
 
 
-  draw_dot: (a,b,rgb) ->
-    console.log "draw dot at #{a},#{b} #{rgb}"
+  draw_dot: (grid,a,b,rgb) ->
+    # console.log "draw dot at #{a},#{b} #{rgb}"
+    rgb.push(255)
+    dots = @get_pixels(a,b)
+    @draw_pixel(grid,px,rgb) for px in dots
+
+
+  draw_pixel: (grid,px,rgba) ->
+    # console.log "draw pixel at #{px}  rgba = #{rgba}"
+    ix = 2400*px[1] + 4*px[0]
+    for i in [0..3]
+      grid[ix + i] = rgba[i]
+
 
 
   get_pixels: (a,b) ->
@@ -166,6 +139,20 @@ class DotDraw
       for x in [ cx - @shape[k] .. cx + @shape[k] ]
         pxx.push([x,y])
     return pxx
+
+
+
+#   rrr = [rr,0,0,255]
+#   ggg = [0,gg,0,255]
+#   bbb = [0,0,bb,255]
+#   rgb = [rrr,bbb,ggg]
+#   zz = 28800*nn + 48*mm
+
+# putpx = (gggg, rgba, zzzz, kkkk, jjjj) ->
+#   ix = zzzz + 2400*kkkk + 4*jjjj
+#   for ii in [0..3]
+#     gggg[ix+ii] = rgba[ii]
+
 
 
 

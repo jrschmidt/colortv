@@ -39,50 +39,13 @@ ColorTvApp = (function() {
     bigctx = big.getContext('2d');
     bigimgdata = bigctx.createImageData(600, 600);
     grid = bigimgdata.data;
-    this.dots.draw_dot(20, 12, [255, 0, 0]);
+    this.dots.draw_dot(grid, 20, 21, [255, 0, 0]);
+    this.dots.draw_dot(grid, 99, 62, [0, 255, 0]);
+    this.dots.draw_dot(grid, 160, 85, [0, 0, 255]);
+    this.dots.draw_dot(grid, 62, 99, [255, 0, 0]);
+    this.dots.draw_dot(grid, 123, 30, [0, 255, 0]);
+    this.dots.draw_dot(grid, 130, 93, [0, 0, 255]);
     return bigimgdata;
-  };
-
-  ColorTvApp.prototype.insert = function(gr, mm, nn, rr, gg, bb) {
-    var bbb, cc, dots, ggg, i, j, j2, j3, k, results, rgb, rrr, zz;
-    dots = [[6, 0, 6], [6, 0, 6], [6, 0, 6], [6, 0, 6], [6, 0, 6], [5, 2, 5], [4, 4, 4], [3, 6, 3], [3, 6, 3], [2, 8, 2], [1, 10, 1], [0, 12, 0]];
-    rrr = [rr, 0, 0, 255];
-    ggg = [0, gg, 0, 255];
-    bbb = [0, 0, bb, 255];
-    rgb = [rrr, bbb, ggg];
-    zz = 28800 * nn + 48 * mm;
-    results = [];
-    for (k = i = 0; i <= 11; k = ++i) {
-      j2 = 0;
-      j3 = 0;
-      results.push((function() {
-        var l, m, ref, ref1, results1;
-        results1 = [];
-        for (cc = l = 0; l <= 2; cc = ++l) {
-          if (dots[k][cc] > 0) {
-            for (j = m = ref = j2, ref1 = j2 + dots[k][cc] - 1; ref <= ref1 ? m <= ref1 : m >= ref1; j = ref <= ref1 ? ++m : --m) {
-              this.putpx(gr, rgb[cc], zz, k, j);
-              j3 = j;
-            }
-            results1.push(j2 = j3 + 1);
-          } else {
-            results1.push(void 0);
-          }
-        }
-        return results1;
-      }).call(this));
-    }
-    return results;
-  };
-
-  ColorTvApp.prototype.putpx = function(gggg, rgba, zzzz, kkkk, jjjj) {
-    var i, ii, ix, results;
-    ix = zzzz + 2400 * kkkk + 4 * jjjj;
-    results = [];
-    for (ii = i = 0; i <= 3; ii = ++i) {
-      results.push(gggg[ix + ii] = rgba[ii]);
-    }
-    return results;
   };
 
   ColorTvApp.prototype.display = function(pxdata) {
@@ -102,19 +65,37 @@ DotDraw = (function() {
     this.shape = [1, 2, 3, 3, 3, 2, 1];
   }
 
-  DotDraw.prototype.draw_dot = function(a, b, rgb) {
-    return console.log("draw dot at " + a + "," + b + " " + rgb);
+  DotDraw.prototype.draw_dot = function(grid, a, b, rgb) {
+    var dots, l, len, px, results;
+    rgb.push(255);
+    dots = this.get_pixels(a, b);
+    results = [];
+    for (l = 0, len = dots.length; l < len; l++) {
+      px = dots[l];
+      results.push(this.draw_pixel(grid, px, rgb));
+    }
+    return results;
+  };
+
+  DotDraw.prototype.draw_pixel = function(grid, px, rgba) {
+    var i, ix, l, results;
+    ix = 2400 * px[1] + 4 * px[0];
+    results = [];
+    for (i = l = 0; l <= 3; i = ++l) {
+      results.push(grid[ix + i] = rgba[i]);
+    }
+    return results;
   };
 
   DotDraw.prototype.get_pixels = function(a, b) {
-    var cx, cxy, cy, i, k, l, pxx, ref, ref1, x, y;
+    var cx, cxy, cy, k, l, m, pxx, ref, ref1, x, y;
     pxx = [];
     cxy = this.dot_helper.get_xy(a, b);
     cx = cxy[0];
     cy = cxy[1];
-    for (k = i = 0; i <= 6; k = ++i) {
+    for (k = l = 0; l <= 6; k = ++l) {
       y = cy + k - 3;
-      for (x = l = ref = cx - this.shape[k], ref1 = cx + this.shape[k]; ref <= ref1 ? l <= ref1 : l >= ref1; x = ref <= ref1 ? ++l : --l) {
+      for (x = m = ref = cx - this.shape[k], ref1 = cx + this.shape[k]; ref <= ref1 ? m <= ref1 : m >= ref1; x = ref <= ref1 ? ++m : --m) {
         pxx.push([x, y]);
       }
     }
@@ -129,10 +110,10 @@ DotIterator = (function() {
   function DotIterator() {}
 
   DotIterator.prototype.get_span = function(col) {
-    var bottom, i, l, results, results1, top;
+    var bottom, l, m, results, results1, top;
     if (indexOf.call((function() {
       results = [];
-      for (i = 0; i <= 169; i++){ results.push(i); }
+      for (l = 0; l <= 169; l++){ results.push(l); }
       return results;
     }).apply(this), col) >= 0) {
       if (col % 2 === 0) {
@@ -149,7 +130,7 @@ DotIterator = (function() {
     }
     if (indexOf.call((function() {
       results1 = [];
-      for (l = 15; l <= 185; l++){ results1.push(l); }
+      for (m = 15; m <= 185; m++){ results1.push(m); }
       return results1;
     }).apply(this), col) >= 0) {
       if (col % 2 === 0) {
@@ -171,7 +152,7 @@ DotSquareHelper = (function() {
   }
 
   DotSquareHelper.prototype.find_squares = function(a, b) {
-    var ad, adjust, dot_dxy, dot_xxyy, dot_xy, i, k, l, len, qdx, qdy, quad_xxyy, sq, sqq, sqx, sqy, xy12;
+    var ad, adjust, dot_dxy, dot_xxyy, dot_xy, k, l, len, m, qdx, qdy, quad_xxyy, sq, sqq, sqx, sqy, xy12;
     dot_xy = this.dot_helper.get_xy(a, b);
     xy12 = this.get_xxyy(dot_xy[0], dot_xy[1]);
     dot_xxyy = xy12.xxyy;
@@ -200,14 +181,14 @@ DotSquareHelper = (function() {
       }
     }
     sq = [];
-    for (i = 0, len = adjust.length; i < len; i++) {
-      ad = adjust[i];
+    for (l = 0, len = adjust.length; l < len; l++) {
+      ad = adjust[l];
       sqx = dot_xxyy[0] + ad[0];
       sqy = dot_xxyy[1] + ad[1];
       sq.push([sqx, sqy]);
     }
     quad_xxyy = sq[0];
-    for (k = l = 0; l <= 3; k = ++l) {
+    for (k = m = 0; m <= 3; k = ++m) {
       if (sq[k][0] < 0 || sq[k][0] > 49 || sq[k][1] < 0 || sq[k][1] > 49) {
         sq[k] = null;
       }
@@ -273,18 +254,18 @@ QuadrantSplitter = (function() {
   }
 
   QuadrantSplitter.prototype.ratios = function(hx, hy) {
-    var i, len, q, rr, spl;
+    var l, len, q, rr, spl;
     spl = this.split(hx, hy);
     rr = [];
-    for (i = 0, len = spl.length; i < len; i++) {
-      q = spl[i];
+    for (l = 0, len = spl.length; l < len; l++) {
+      q = spl[l];
       rr.push(q / 117);
     }
     return rr;
   };
 
   QuadrantSplitter.prototype.split = function(hx, hy) {
-    var btm, cut, dn_trim, i, j, l, m, n, qa, qb, qc, qd, ref, ref1, top, up_trim;
+    var btm, cut, dn_trim, j, l, m, n, o, qa, qb, qc, qd, ref, ref1, top, up_trim;
     top = this.up.slice(0);
     btm = this.dn.slice(0);
     if (hy < 6) {
@@ -298,14 +279,14 @@ QuadrantSplitter = (function() {
       dn_trim = 0;
     }
     if (hy < 6) {
-      for (j = i = 0; i <= 12; j = ++i) {
+      for (j = l = 0; l <= 12; j = ++l) {
         cut = Math.min(top[j], up_trim);
         top[j] = top[j] - cut;
         btm[j] = btm[j] + cut;
       }
     }
     if (hy > 6) {
-      for (j = l = 0; l <= 12; j = ++l) {
+      for (j = m = 0; m <= 12; j = ++m) {
         cut = Math.min(btm[j], dn_trim);
         btm[j] = btm[j] - cut;
         top[j] = top[j] + cut;
@@ -315,11 +296,11 @@ QuadrantSplitter = (function() {
     qb = 0;
     qc = 0;
     qd = 0;
-    for (j = m = 0, ref = hx; 0 <= ref ? m <= ref : m >= ref; j = 0 <= ref ? ++m : --m) {
+    for (j = n = 0, ref = hx; 0 <= ref ? n <= ref : n >= ref; j = 0 <= ref ? ++n : --n) {
       qa += top[j];
       qc += btm[j];
     }
-    for (j = n = ref1 = hx + 1; ref1 <= 12 ? n <= 12 : n >= 12; j = ref1 <= 12 ? ++n : --n) {
+    for (j = o = ref1 = hx + 1; ref1 <= 12 ? o <= 12 : o >= 12; j = ref1 <= 12 ? ++o : --o) {
       qb += top[j];
       qd += btm[j];
     }
