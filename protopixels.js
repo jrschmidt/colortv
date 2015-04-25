@@ -65,7 +65,7 @@ DotDraw = (function() {
     this.dot_helper = new DotHelper;
     this.dsq_helper = new DotSquareHelper;
     this.splitter = new QuadrantSplitter;
-    this.shape = [1, 2, 3, 3, 3, 2, 1];
+    this.shape = [[-1, 1], [-3, 2], [-3, 3], [-3, 3], [-3, 3], [-2, 3], [-1, 1]];
   }
 
   DotDraw.prototype.build_dot = function(grid, img_data, a, b) {
@@ -119,7 +119,7 @@ DotDraw = (function() {
     cy = cxy[1];
     for (k = l = 0; l <= 6; k = ++l) {
       y = cy + k - 3;
-      for (x = m = ref = cx - this.shape[k], ref1 = cx + this.shape[k]; ref <= ref1 ? m <= ref1 : m >= ref1; x = ref <= ref1 ? ++m : --m) {
+      for (x = m = ref = cx + this.shape[k][0], ref1 = cx + this.shape[k][1]; ref <= ref1 ? m <= ref1 : m >= ref1; x = ref <= ref1 ? ++m : --m) {
         if (x >= 0 && x < 600 && y >= 0 && y < 600) {
           pxx.push([x, y]);
         }

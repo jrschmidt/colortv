@@ -5,7 +5,7 @@ describe "Dot drawing functions", ->
 
   it "should find all the pixels for a dot a,b", ->
     dots = @draw.get_pixels(33,22)
-    expect(dots.length).toEqual(37)
+    expect(dots.length).toEqual(39)
     expect(dots).toContain([112,52])
     expect(dots).toContain([109,52])
     expect(dots).toContain([114,54])
@@ -14,7 +14,9 @@ describe "Dot drawing functions", ->
     expect(dots).toContain([111,49])
     expect(dots).toContain([112,49])
     expect(dots).toContain([113,55])
-    expect(dots).not.toContain([109,50])
+    expect(dots).toContain([109,50])
+    expect(dots).toContain([115,54])
+    expect(dots).not.toContain([110,49])
     expect(dots).not.toContain([115,55])
     expect(dots).not.toContain([388,502])
     expect(dots).not.toContain([400,200])

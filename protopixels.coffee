@@ -110,7 +110,7 @@ class DotDraw
     @dot_helper = new DotHelper
     @dsq_helper = new DotSquareHelper
     @splitter = new QuadrantSplitter
-    @shape = [1,2,3,3,3,2,1]
+    @shape = [ [-1,1], [-3,2], [-3,3], [-3,3], [-3,3], [-2,3], [-1,1] ]
 
 
   build_dot:(grid, img_data, a, b) ->
@@ -152,7 +152,7 @@ class DotDraw
     cy = cxy[1]
     for k in [0..6]
       y = cy + k - 3
-      for x in [ cx - @shape[k] .. cx + @shape[k] ]
+      for x in [ cx + @shape[k][0] .. cx + @shape[k][1] ]
         pxx.push([x,y]) if x >= 0 and x < 600 and y >= 0 and y < 600
     return pxx
 
