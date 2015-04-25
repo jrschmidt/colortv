@@ -18,6 +18,7 @@ window.onload = function() {
 ColorTvApp = (function() {
   function ColorTvApp() {
     this.dots = new DotDraw;
+    this.iterator = new DotIterator;
   }
 
   ColorTvApp.prototype.repixelize = function(original) {
@@ -27,7 +28,7 @@ ColorTvApp = (function() {
   };
 
   ColorTvApp.prototype.convert = function(img) {
-    var big, bigctx, bigimgdata, grid, ht, idata, imgdata, octx, orig, wd;
+    var a, b, big, bigctx, bigimgdata, grid, ht, idata, imgdata, l, m, octx, orig, ref, ref1, span, wd;
     orig = document.createElement("canvas");
     octx = orig.getContext('2d');
     octx.drawImage(img, 0, 0);
@@ -39,12 +40,12 @@ ColorTvApp = (function() {
     bigctx = big.getContext('2d');
     bigimgdata = bigctx.createImageData(600, 600);
     grid = bigimgdata.data;
-    this.dots.draw_dot(grid, 20, 21, [255, 0, 0]);
-    this.dots.draw_dot(grid, 99, 62, [0, 255, 0]);
-    this.dots.draw_dot(grid, 160, 85, [0, 0, 255]);
-    this.dots.draw_dot(grid, 62, 99, [255, 0, 0]);
-    this.dots.draw_dot(grid, 123, 30, [0, 255, 0]);
-    this.dots.draw_dot(grid, 130, 93, [0, 0, 255]);
+    for (a = l = 0; l <= 185; a = ++l) {
+      span = this.iterator.get_span(a);
+      for (b = m = ref = span[0], ref1 = span[1]; m <= ref1; b = m += 2) {
+        this.dots.build_dot(grid, a, b);
+      }
+    }
     return bigimgdata;
   };
 
@@ -64,6 +65,21 @@ DotDraw = (function() {
     this.dot_helper = new DotHelper;
     this.shape = [1, 2, 3, 3, 3, 2, 1];
   }
+
+  DotDraw.prototype.build_dot = function(grid, a, b) {
+    var rgb;
+    switch (a % 3) {
+      case 0:
+        rgb = [0, 255, 0];
+        break;
+      case 1:
+        rgb = [0, 0, 255];
+        break;
+      case 2:
+        rgb = [255, 0, 0];
+    }
+    return this.draw_dot(grid, a, b, rgb);
+  };
 
   DotDraw.prototype.draw_dot = function(grid, a, b, rgb) {
     var dots, l, len, px, results;

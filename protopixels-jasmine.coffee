@@ -67,6 +67,7 @@ class ColorTvApp
 
   constructor: ->
     @dots = new DotDraw
+    @iterator = new DotIterator
 
   repixelize: (original) ->
     bigdata = @convert(original)
@@ -88,12 +89,14 @@ class ColorTvApp
     bigimgdata = bigctx.createImageData(600,600)
     grid = bigimgdata.data
 
-    @dots.draw_dot(grid,20,21,[255,0,0])
-    @dots.draw_dot(grid,99,62,[0,255,0])
-    @dots.draw_dot(grid,160,85,[0,0,255])
-    @dots.draw_dot(grid,62,99,[255,0,0])
-    @dots.draw_dot(grid,123,30,[0,255,0])
-    @dots.draw_dot(grid,130,93,[0,0,255])
+    # span = @iterator.get_span(423)
+
+    @dots.build_dot(grid,20,21)
+    @dots.build_dot(grid,99,62)
+    @dots.build_dot(grid,160,85)
+    @dots.build_dot(grid,62,99)
+    @dots.build_dot(grid,123,30)
+    @dots.build_dot(grid,130,93)
 
     # column = @iterator.get_span(20)
 
@@ -112,6 +115,17 @@ class DotDraw
   constructor: ->
     @dot_helper = new DotHelper
     @shape = [1,2,3,3,3,2,1]
+
+
+  build_dot:(grid,a,b) ->
+    switch a%3
+      when 0
+        rgb = [0,255,0]
+      when 1
+        rgb = [0,0,255]
+      when 2
+        rgb = [255,0,0]
+    @draw_dot(grid,a,b,rgb)
 
 
   draw_dot: (grid,a,b,rgb) ->
