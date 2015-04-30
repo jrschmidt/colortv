@@ -240,8 +240,8 @@ class DotSquareHelper
   get_xxyy: (x,y) ->
     xx = Math.floor(x/12)
     yy = Math.floor(y/12)
-    dx = x%12
-    dy = y%12
+    dx = (x + 12) % 12
+    dy = (y + 12) % 12
     return {xxyy: [xx,yy], dxy: [dx,dy]}
 
 
